@@ -9,6 +9,11 @@ application.get("/stations", (reg, res) => {
     res.json(JSON.parse(stations));
 })
 
+application.get("/stations2", (reg, res) => {
+    const stations = fs.readFileSync('./stations.json')
+    res.json(JSON.parse(stations));
+})
+
 application.listen(8080, () => {
-    console.log("application is running very well");
+    console.log("application is running good");
 });
