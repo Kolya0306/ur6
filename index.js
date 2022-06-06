@@ -15,5 +15,5 @@ application.get("/stations2", (reg, res) => {
 })
 
 application.listen(8080, () => {
-    console.log("application is running well");
+    console.log("application is running good");
 });
