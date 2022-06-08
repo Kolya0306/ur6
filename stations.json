@@ -1,12 +1,1 @@
-[
-    {
-        "id": 123, 
-        "address": "A1",
-        "status": true
-    },
-    {
-        "id": 125, 
-        "address": "B1",
-        "status": true
-    }
-]
+[{"id":123,"address":"A1","status":true},{"id":125,"address":"B1","status":true},{"id":1,"address":"hhh","status":true},{"id":4,"address":"New One","status":true},{"id":6,"address":"two","status":false}]
