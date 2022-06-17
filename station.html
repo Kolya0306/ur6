@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+      
+      async function refreshStations() {
+            let response = await fetch("http://localhost:8082/stations")
+            let stations = await response.json()
+            for (let i = 0; i < stations.length; i++) {
+                let station = stations[i]
+                console.log(station); 
+
+                let tr = document.createElement("tr");
+                let tdId = document.createElement("td");
+                let tdAddress = document.createElement("td");
+                let tdStatus = document.createElement("td");
+                let tdDelete = document.createElement("button");
+
+
+                tdId.innerText = station.id
+                tdAddress.innerText = station.address
+                tdStatus.innerText = station.status
+                tdDelete.onclick=function(){deletestation(station.id)}
+
+
+                tr.appendChild(tdId);
+                tr.appendChild(tdAddress);
+                tr.appendChild(tdStatus);
+                tr.appendChild(tdDelete);
+
+
+                let elementtable = document.getElementById("two");
+                elementtable.appendChild(tr);
+
+            
+            }    
+
+
+        }
+
+        function deletestation(id){
+            fetch('http://localhost:8082/stations/' + id, {
+            method: 'DELETE',
+            })
+            .then(res => console.log(res))
+        }
+
+        async function postStation() {
+            const rawResponse = await fetch('http://localhost:8082/stations', {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({a: 1, b: 'Textual content'})
+            });
+            const content = await rawResponse.json();
+
+            console.log(content);
+        }
+
+        
+    </script>
+</head>
+<body>
+   
+    <button onclick="refreshStations()">Refresh Stations</button>
+    <button onclick="postStation()">add Stations</button>
+
+    
+
+    <table id="two">
+        <tr>
+            <th>Id</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Delete</th>
+        </tr>
+
+    </table>
+
+    <form action="" method="post">
+       
+        <label for="POST-name">Id:</label>
+        <input Id="POST-name" type="text" name="name">
+       
+        <label for="POST-name">Address:</label>
+        <input Address="POST-name" type="text" name="name">
+        
+        <label for="POST-name">Status:</label>
+        <input Status="POST-name" type="text" name="name">
+       
+        <input type="submit" value="Save">
+
+     </form>
+    
+</body>
+</html>
