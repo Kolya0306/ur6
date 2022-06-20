@@ -19,27 +19,35 @@
                 let tdAddress = document.createElement("td");
                 let tdStatus = document.createElement("td");
                 let tdDelete = document.createElement("button");
+                let tdUpdate = document.createElement("button");
 
 
                 tdId.innerText = station.id
+
                 tdAddress.innerText = station.address
+
                 tdStatus.innerText = station.status
-                tdDelete.onclick=function(){deletestation(station.id)}
+
+                tdDelete.innerText = "Delete"
+                tdDelete.onclick = function(){
+                    deletestation(station.id)}
+
+                tdUpdate.innerText = "Update"
+                tdUpdate.onclick = function(){
+                    updateStation(station)
+                }
 
 
                 tr.appendChild(tdId);
                 tr.appendChild(tdAddress);
                 tr.appendChild(tdStatus);
                 tr.appendChild(tdDelete);
+                tr.appendChild(tdUpdate);
 
 
                 let elementtable = document.getElementById("two");
-                elementtable.appendChild(tr);
-
-            
-            }    
-
-
+                elementtable.appendChild(tr)
+            }
         }
 
         function deletestation(id){
@@ -49,54 +57,80 @@
             .then(res => console.log(res))
         }
 
-        async function postStation() {
-            const rawResponse = await fetch('http://localhost:8082/stations', {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({a: 1, b: 'Textual content'})
-            });
-            const content = await rawResponse.json();
+        function postStation() {
+            const form = document.getElementById("newStation")
+            const formData = new FormData(form);
+            let resp = {}
+            for (let [key, value] of formData.entries()) {
+                resp[key] = value;
+            }
+            alert(formData.entries())
 
-            console.log(content);
+            fetch("http://localhost:8082/stations", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                body: JSON.stringify(resp)
+            }).then(res => {
+                console.log("Request complete! response:", res);
+            });
+            
+        }   
+        
+        function updateStation(station){
+            alert(JSON.stringify(station))
+            document.forms["newStation"].elements["id"].value = station.id
+            document.forms["newStation"].elements["address"].value = station.address
+            document.forms["newStation"].elements["status"].value = station.status
+        }
+        
+        function onUpdate(){
+            const form = document.getElementById("newStation")
+            const formData = new FormData(form);
+            let station = {}
+            for (let [key, value] of formData.entries()) {
+                station[key] = value;
+            }
+
+            alert(JSON.stringify(station))
+
+            fetch('http://localhost:8082/stations/' + station.id, {
+                method: "PUT",
+                headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                body: JSON.stringify(station)
+            }).then(json => console.log(json))
+        
         }
 
-        
     </script>
 </head>
 <body>
    
     <button onclick="refreshStations()">Refresh Stations</button>
-    <button onclick="postStation()">add Stations</button>
-
     
+    <button onclick="postStation()">Post Stations</button>
+
+    <button onclick="onUpdate()">Save(update)</button>
 
     <table id="two">
         <tr>
             <th>Id</th>
             <th>Address</th>
             <th>Status</th>
-            <th>Delete</th>
         </tr>
-
+        
     </table>
 
-    <form action="" method="post">
-       
-        <label for="POST-name">Id:</label>
-        <input Id="POST-name" type="text" name="name">
-       
-        <label for="POST-name">Address:</label>
-        <input Address="POST-name" type="text" name="name">
-        
-        <label for="POST-name">Status:</label>
-        <input Status="POST-name" type="text" name="name">
-       
-        <input type="submit" value="Save">
+    <form id="newStation" action="form" method="post">
 
-     </form>
+        <input id="idNew" type="text" name="id">
+
+        <input id="addresNew" type="text" name="address">
+
+        <input id="statusNew" type="text" name="status">
+
+    </form>
+
+    
     
 </body>
 </html>
