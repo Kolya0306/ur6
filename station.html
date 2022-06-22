@@ -5,119 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script>
-      
-      async function refreshStations() {
-            let response = await fetch("http://localhost:8082/stations")
-            let stations = await response.json()
-            for (let i = 0; i < stations.length; i++) {
-                let station = stations[i]
-                console.log(station); 
-
-                let tr = document.createElement("tr");
-                let tdId = document.createElement("td");
-                let tdAddress = document.createElement("td");
-                let tdStatus = document.createElement("td");
-                let tdDelete = document.createElement("button");
-                let tdUpdate = document.createElement("button");
-
-
-                tdId.innerText = station.id
-
-                tdAddress.innerText = station.address
-
-                tdStatus.innerText = station.status
-
-                tdDelete.innerText = "Delete"
-                tdDelete.onclick = function(){
-                    deletestation(station.id)}
-
-                tdUpdate.innerText = "Update"
-                tdUpdate.onclick = function(){
-                    updateStation(station)
-                }
-
-
-                tr.appendChild(tdId);
-                tr.appendChild(tdAddress);
-                tr.appendChild(tdStatus);
-                tr.appendChild(tdDelete);
-                tr.appendChild(tdUpdate);
-
-
-                let elementtable = document.getElementById("two");
-                elementtable.appendChild(tr)
-            }
-        }
-
-        function deletestation(id){
-            fetch('http://localhost:8082/stations/' + id, {
-            method: 'DELETE',
-            })
-            .then(res => console.log(res))
-        }
-
-        function postStation() {
-            const form = document.getElementById("newStation")
-            const formData = new FormData(form);
-            let resp = {}
-            for (let [key, value] of formData.entries()) {
-                resp[key] = value;
-            }
-            alert(formData.entries())
-
-            fetch("http://localhost:8082/stations", {
-                method: "POST",
-                headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                body: JSON.stringify(resp)
-            }).then(res => {
-                console.log("Request complete! response:", res);
-            });
-            
-        }   
-        
-        function updateStation(station){
-            alert(JSON.stringify(station))
-            document.forms["newStation"].elements["id"].value = station.id
-            document.forms["newStation"].elements["address"].value = station.address
-            document.forms["newStation"].elements["status"].value = station.status
-        }
-        
-        function onUpdate(){
-            const form = document.getElementById("newStation")
-            const formData = new FormData(form);
-            let station = {}
-            for (let [key, value] of formData.entries()) {
-                station[key] = value;
-            }
-
-            alert(JSON.stringify(station))
-
-            fetch('http://localhost:8082/stations/' + station.id, {
-                method: "PUT",
-                headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                body: JSON.stringify(station)
-            }).then(json => console.log(json))
-        
-        }
-
-    </script>
+    <link rel="stylesheet" type="text/css" href="station.css">
+    <script src= "station.js" ></script>
 </head>
 <body>
-   
-    <button onclick="refreshStations()">Refresh Stations</button>
+   <h2 class="h2">Station list</h2>
+    <button class="btn" onclick="refreshStations()">Refresh Stations</button>
     
-    <button onclick="postStation()">Post Stations</button>
+    <button class="btn" onclick="postStation()">Post Stations</button>
 
-    <button onclick="onUpdate()">Save(update)</button>
+    <button class="btn" onclick="onUpdate()">Save(update)</button>
 
     <table id="two">
         <tr>
             <th>Id</th>
             <th>Address</th>
             <th>Status</th>
+            <th></th>
         </tr>
         
+        <tbody id = "table"></tbody>
+
     </table>
 
     <form id="newStation" action="form" method="post">
